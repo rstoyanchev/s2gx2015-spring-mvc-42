@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test page</title>
+</head>
+<body>
+
+    <h3>WebSocket Interval Stream:</h3>
+    <p>
+        <select id="transports" size="1">
+            <option value="auto">Select Transport</option>
+            <option value="websocket">websocket</option>
+            <option value="xhr-streaming">xhr-streaming</option>
+            <option value="xhr-polling">xhr-polling</option>
+            <option value="eventsource">eventsource</option>
+            <option value="iframe-eventsource">iframe-eventsource</option>
+            <option value="iframe-htmlfile">iframe-htmlfile</option>
+            <option value="iframe-xhr-polling">iframe-xhr-polling</option>
+            <option value="jsonp-polling">jsonp-polling</option>
+            <option value="xdr-streaming">xdr-streaming</option>
+            <option value="xdr-polling">xdr-polling</option>
+        </select>
+    </p>
+    <p>
+        <button id="start">Start</button>
+        <button id="stop">Stop</button>
+    </p>
+
+
+    <script src="../assets/jquery-2.1.4.js"></script>
+    <script src="../assets/sockjs-1.0.3.js"></script>
+    <script src="../assets/stomp-2.3.3.js"></script>
+
+    <script type="text/javascript">
+
+      (function() {
+
+        $( "#start" ).bind( "click", function() {
+
+            var options = {debug: true};
+            if ($('#transports option:selected').length != 0) {
+                var transport = $( "#transports" ).val();
+                if (transport != "auto") {
+                    options = {debug: true, transports: [transport]};
+                }
+            }
+
+            var socket = new SockJS('/messaging', null, options);
+            var client = Stomp.over(socket);
+
+            client.connect({}, function(frame) {
+                console.log('Connected.');
+
+                var subscription = client.subscribe("/topic/interval", function(message) {
+                    console.log('Got: ' + message.body);
+                });
+
+                $( "#stop" ).bind( "click", function() {
+                    subscription.unsubscribe();
+                });
+            });
+        });
+
+      })();
+
+    </script>
+
+</body>
+</html>
