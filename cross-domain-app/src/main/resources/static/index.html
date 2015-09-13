@@ -13,12 +13,6 @@
         <button id="sseStop">Stop</button>
     </p>
 
-    <h3>WebSocket Stream:</h3>
-    <p>
-        <button id="webSocketStart">Start</button>
-        <button id="webSocketStop">Stop</button>
-    </p>
-
     <h3>WebSocket Stream Consumer:</h3>
     <p>
         <select id="transports" size="1">
@@ -50,21 +44,13 @@
       (function() {
 
         $( "#sseStart" ).bind( "click", function() {
-            var eventSource = new EventSource("/sse-interval");
+            var eventSource = new EventSource("http://localhost:8080/sse-interval");
             eventSource.onmessage = function(e) {
                 console.log('Got: ' + e.data);
             }
             $( "#sseStop" ).bind( "click", function() {
                 eventSource.close();
             });
-        });
-
-        $( "#webSocketStart" ).bind( "click", function() {
-            $.post( "/interval");
-        });
-
-        $( "#webSocketStop" ).bind( "click", function() {
-            $.ajax({ url: "/interval", method: 'DELETE' });
         });
 
         $( "#webSocketConsumerStart" ).bind( "click", function() {
@@ -77,7 +63,7 @@
                 }
             }
 
-            var socket = new SockJS('/messaging', null, options);
+            var socket = new SockJS('http://localhost:8080/messaging', null, options);
             var client = Stomp.over(socket);
 
             client.connect({}, function(frame) {

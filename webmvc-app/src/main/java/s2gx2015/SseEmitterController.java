@@ -14,29 +14,29 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 
+@CrossOrigin("http://localhost:9000")
 @Controller
-public class SseIntervalController {
+public class SseEmitterController {
 
-	private static Logger logger = LoggerFactory.getLogger(SseIntervalController.class);
-
-
-	private final AtomicInteger integer = new AtomicInteger();
+	private static Logger logger = LoggerFactory.getLogger(SseEmitterController.class);
 
 	private final Set<SseEmitter> emitters = new CopyOnWriteArraySet<>();
 
 
 	@Autowired
-	public SseIntervalController(TaskScheduler scheduler) {
-		scheduleTask(scheduler, this.emitters, this.integer);
+	public SseEmitterController(TaskScheduler scheduler) {
+		scheduleTask(scheduler, this.emitters);
 	}
 
-	private static void scheduleTask(TaskScheduler scheduler, Set<SseEmitter> emitters, AtomicInteger integer) {
+	private static void scheduleTask(TaskScheduler scheduler, Set<SseEmitter> emitters) {
+		AtomicInteger integer = new AtomicInteger();
 		scheduler.scheduleWithFixedDelay(() -> {
 			int intValue = integer.getAndIncrement();
 			for (SseEmitter emitter : emitters) {

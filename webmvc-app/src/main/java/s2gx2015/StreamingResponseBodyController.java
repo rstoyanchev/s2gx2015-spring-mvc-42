@@ -12,9 +12,9 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 
 
 @Controller
-public class DirectStreamingIntervalController {
+public class StreamingResponseBodyController {
 
-	private static Logger logger = LoggerFactory.getLogger(DirectStreamingIntervalController.class);
+	private static Logger logger = LoggerFactory.getLogger(StreamingResponseBodyController.class);
 
 
 	@RequestMapping(path = "/streaming-response-body", method = RequestMethod.GET)
