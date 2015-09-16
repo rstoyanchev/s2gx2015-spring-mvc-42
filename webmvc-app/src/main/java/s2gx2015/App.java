@@ -54,7 +54,6 @@ public class App {
         @Autowired
         private App app;
 
-
         @Override
         public void registerStompEndpoints(StompEndpointRegistry registry) {
             registry.addEndpoint("/messaging")
@@ -66,7 +65,7 @@ public class App {
 
         @Override
         public void configureMessageBroker(MessageBrokerRegistry registry) {
-            registry.enableSimpleBroker("/topic")
+            registry.enableSimpleBroker()
                     .setTaskScheduler(this.app.scheduler());  // for heartbeats
         }
     }
